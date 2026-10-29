@@ -1,0 +1,71 @@
+---
+import '@/styles/global.css';
+import { brand } from '@/config/brand';
+import { localePath, type Dict, type Lang } from '@/i18n';
+
+interface Props {
+  t: Dict;
+  lang: Lang;
+  /** Page slug without language prefix ('' for home). */
+  slug?: string;
+  /** Overrides the home page title/description. */
+  meta?: { title: string; description: string };
+}
+
+const { t, lang, slug = '', meta = t.meta } = Astro.props;
+const site = Astro.site ?? new URL(brand.url);
+const enUrl = new URL(localePath('en', slug), site).href;
+const esUrl = new URL(localePath('es', slug), site).href;
+const canonical = lang === 'en' ? enUrl : esUrl;
+
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: brand.name,
+  url: brand.url,
+  email: brand.email,
+  telephone: brand.phone,
+  areaServed: 'US',
+  knowsLanguage: ['en', 'es'],
+};
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{meta.title}</title>
+    <meta name="description" content={meta.description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="es" href={esUrl} />
+    <link rel="alternate" hreflang="x-default" href={enUrl} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={meta.title} />
+    <meta property="og:description" content={meta.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'es_BO'} />
+    <script type="application/ld+json" set:html={JSON.stringify(org)} />
+  </head>
+  <body>
+    <slot />
+    <script>
+      // Scroll-reveal for any element with [data-reveal].
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add('is-visible');
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' },
+      );
+      document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>

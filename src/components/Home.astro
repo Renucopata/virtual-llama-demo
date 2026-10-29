@@ -1,0 +1,37 @@
+---
+// The full landing page; each route only picks the language.
+import Base from '@/layouts/Base.astro';
+import Header from './Header.astro';
+import Hero from './Hero.astro';
+import Advantages from './Advantages.astro';
+import About from './About.astro';
+import Services from './Services.astro';
+import Industries from './Industries.astro';
+import Faq from './Faq.astro';
+import Contact from './Contact.astro';
+import Footer from './Footer.astro';
+import WhatsAppButton from './WhatsAppButton.astro';
+import { getDict, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getDict(lang);
+---
+
+<Base t={t} lang={lang}>
+  <Header t={t} lang={lang} />
+  <main>
+    <Hero t={t} lang={lang} />
+    <Advantages t={t} />
+    <About t={t} />
+    <Services t={t} />
+    <Industries t={t} />
+    <Faq t={t} />
+    <Contact t={t} />
+  </main>
+  <Footer t={t} lang={lang} />
+  <WhatsAppButton label={t.whatsapp} />
+</Base>

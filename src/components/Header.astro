@@ -1,0 +1,86 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { localePath, otherLang, type Dict, type Lang } from '@/i18n';
+
+interface Props {
+  t: Dict;
+  lang: Lang;
+  /** Current page slug, so the language switch stays on the same page. */
+  slug?: string;
+}
+
+const { t, lang, slug = '' } = Astro.props;
+const home = localePath(lang);
+// Section anchors point at the home page so they also work from other pages.
+const links = t.nav.links.map((l) => ({ ...l, href: `${home}${l.href}` }));
+---
+
+<header id="site-header" class="fixed inset-x-0 top-0 z-40 transition-all duration-300">
+  <div class="container-x flex h-18 items-center justify-between gap-6">
+    <a href={home} aria-label="Home"><Logo /></a>
+
+    <nav class="hidden items-center gap-7 lg:flex" aria-label="Main">
+      {links.map((l) => <a href={l.href} class="text-sm text-graphite transition hover:text-ink">{l.label}</a>)}
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a
+        href={localePath(otherLang(lang), slug)}
+        hreflang={otherLang(lang)}
+        title={t.nav.switchLang}
+        class="rounded-full border border-ink/15 px-3 py-1.5 font-display text-xs uppercase hover:border-ink"
+      >{lang === 'en' ? 'ES' : 'EN'}</a
+      >
+      <a href={`${home}#contact`} class="btn-dark hidden sm:inline-flex">{t.nav.cta}</a>
+      <button
+        id="menu-open"
+        class="grid size-10 place-items-center rounded-full border border-ink/15 lg:hidden"
+        aria-label={t.nav.menu}
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+      >
+        <Icon name="menu" class="size-5" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="fixed inset-0 z-50 hidden flex-col bg-ink px-4 py-5 text-cream lg:hidden" role="dialog" aria-modal="true">
+  <div class="flex items-center justify-between">
+    <Logo tone="light" />
+    <button id="menu-close" class="grid size-10 place-items-center rounded-full border border-cream/20" aria-label={t.nav.close}>
+      <Icon name="close" class="size-5" />
+    </button>
+  </div>
+  <nav class="mt-12 flex flex-col gap-6" aria-label="Mobile">
+    {links.map((l) => <a href={l.href} class="font-display text-xl uppercase" data-close-menu>{l.label}</a>)}
+  </nav>
+  <a href={`${home}#contact`} class="btn-light mt-auto justify-center" data-close-menu>{t.nav.cta}</a>
+</div>
+
+<script>
+  const header = document.getElementById('site-header')!;
+  const menu = document.getElementById('mobile-menu')!;
+  const openBtn = document.getElementById('menu-open')!;
+
+  const onScroll = () => {
+    const scrolled = window.scrollY > 12;
+    header.classList.toggle('bg-cream/90', scrolled);
+    header.classList.toggle('backdrop-blur', scrolled);
+    header.classList.toggle('shadow-sm', scrolled);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const setMenu = (open: boolean) => {
+    menu.classList.toggle('hidden', !open);
+    menu.classList.toggle('flex', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+    openBtn.setAttribute('aria-expanded', String(open));
+  };
+  openBtn.addEventListener('click', () => setMenu(true));
+  document.getElementById('menu-close')!.addEventListener('click', () => setMenu(false));
+  menu.querySelectorAll('[data-close-menu]').forEach((el) => el.addEventListener('click', () => setMenu(false)));
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && setMenu(false));
+</script>

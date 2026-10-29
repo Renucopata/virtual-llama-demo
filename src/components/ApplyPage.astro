@@ -1,0 +1,132 @@
+---
+// Two-path entry page: a first question decides whether the visitor applies as an agent or requests services.
+// The choice is kept in ?type=agent|company so each form can be linked to directly.
+import Base from '@/layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import Icon from './Icon.astro';
+import FormFields from './FormFields.astro';
+import WhatsAppButton from './WhatsAppButton.astro';
+import { getDict, localePath, type ApplyPath, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = getDict(lang);
+const a = t.apply;
+const paths: ApplyPath[] = ['agent', 'company'];
+---
+
+<Base t={t} lang={lang} slug="apply" meta={a.meta}>
+  <Header t={t} lang={lang} slug="apply" />
+  <main class="relative overflow-hidden pt-32 pb-24 sm:pt-40">
+    <div class="pointer-events-none absolute -top-40 -right-40 size-[36rem] rounded-full bg-sand/70 blur-3xl" aria-hidden="true"></div>
+
+    <div class="container-x relative max-w-4xl">
+      <a href={localePath(lang)} class="inline-flex items-center gap-2 text-sm text-muted hover:text-ink">
+        <Icon name="arrow" class="size-4 rotate-180" />{a.back}
+      </a>
+
+      <!-- Step 1: the question -->
+      <section id="apply-question" class="mt-8">
+        <p class="eyebrow">{a.eyebrow}</p>
+        <h1 class="mt-4 text-2xl leading-tight sm:text-4xl">{a.question}</h1>
+        <p class="mt-4 text-base text-muted">{a.lead}</p>
+
+        <div class="mt-10 grid gap-5 sm:grid-cols-2">
+          {
+            paths.map((p) => (
+              <button
+                type="button"
+                data-choose={p}
+                class="group flex flex-col items-start rounded-3xl bg-white/70 p-8 text-left ring-1 ring-ink/10 transition hover:-translate-y-1 hover:ring-ink hover:shadow-xl hover:shadow-ink/5 focus-visible:outline-2 focus-visible:outline-ink"
+              >
+                <span class="grid size-14 place-items-center rounded-2xl bg-ink text-cream transition group-hover:bg-accent group-hover:text-ink">
+                  <Icon name={a.choices[p].icon} class="size-7" />
+                </span>
+                <span class="mt-6 font-display text-base text-ink uppercase">{a.choices[p].title}</span>
+                <span class="mt-3 text-sm leading-relaxed text-muted">{a.choices[p].text}</span>
+                <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ink">
+                  <Icon name="arrow" class="size-4 transition group-hover:translate-x-1" />
+                </span>
+              </button>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- Step 2: one form per answer -->
+      {
+        paths.map((p) => {
+          const form = a.forms[p];
+          return (
+            <section data-path={p} class="mt-8 hidden">
+              <button type="button" data-reset class="inline-flex items-center gap-2 rounded-full border border-ink/15 px-4 py-2 text-sm hover:border-ink">
+                <Icon name={a.choices[p].icon} class="size-4" />
+                {a.choices[p].title}
+                <span class="text-muted">· {a.change}</span>
+              </button>
+              <h1 class="mt-8 text-2xl leading-tight sm:text-3xl">{form.title}</h1>
+              <p class="mt-3 text-base text-muted">{form.lead}</p>
+
+              <form
+                data-ajax-form
+                method="POST"
+                class="mt-8 grid gap-4 rounded-3xl bg-white/70 p-6 ring-1 ring-ink/5 sm:grid-cols-2 sm:p-8"
+                data-sending={a.sending}
+                data-success={form.success}
+                data-error={a.error}
+              >
+                <input type="hidden" name="form_type" value={p} />
+                <input type="hidden" name="lang" value={lang} />
+                <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+                <FormFields fields={form.fields} />
+                <div class="flex flex-wrap items-center justify-between gap-4 sm:col-span-2">
+                  <p class="text-xs text-muted">{a.privacy}</p>
+                  <button type="submit" class="btn-dark">
+                    {form.submit}
+                    <Icon name="arrow" class="size-4" />
+                  </button>
+                </div>
+                <p data-form-status class="hidden rounded-xl px-4 py-3 text-sm sm:col-span-2" role="status" />
+              </form>
+            </section>
+          );
+        })
+      }
+    </div>
+  </main>
+  <Footer t={t} lang={lang} />
+  <WhatsAppButton label={t.whatsapp} />
+</Base>
+
+<script>
+  import { initAjaxForms } from '@/scripts/forms';
+
+  initAjaxForms();
+
+  const question = document.getElementById('apply-question')!;
+  const sections = document.querySelectorAll<HTMLElement>('[data-path]');
+
+  const show = (path: string | null, push = true) => {
+    const valid = path === 'agent' || path === 'company' ? path : null;
+    question.classList.toggle('hidden', valid !== null);
+    sections.forEach((s) => s.classList.toggle('hidden', s.dataset.path !== valid));
+
+    if (push) {
+      const url = new URL(location.href);
+      if (valid) url.searchParams.set('type', valid);
+      else url.searchParams.delete('type');
+      history.pushState({ path: valid }, '', url);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  document.querySelectorAll<HTMLButtonElement>('[data-choose]').forEach((b) => b.addEventListener('click', () => show(b.dataset.choose!)));
+  document.querySelectorAll('[data-reset]').forEach((b) => b.addEventListener('click', () => show(null)));
+  window.addEventListener('popstate', () => show(new URL(location.href).searchParams.get('type'), false));
+
+  show(new URL(location.href).searchParams.get('type'), false);
+</script>

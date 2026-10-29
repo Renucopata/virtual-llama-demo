@@ -1,0 +1,33 @@
+---
+// Renders a list of fields defined in the dictionaries as a two-column grid.
+import type { FormField } from '@/i18n';
+
+interface Props {
+  fields: FormField[];
+}
+
+const { fields } = Astro.props;
+const input =
+  'w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-muted focus:border-ink focus:outline-none';
+---
+
+{
+  fields.map((f) => (
+    <label class:list={['grid gap-1.5 text-sm', f.full && 'sm:col-span-2']}>
+      <span>
+        {f.label}
+        {f.required && <span class="text-red-700" aria-hidden="true"> *</span>}
+      </span>
+      {f.type === 'select' ? (
+        <select name={f.name} required={f.required} class={input}>
+          <option value="" selected disabled={f.required}>—</option>
+          {f.options?.map((o) => <option>{o}</option>)}
+        </select>
+      ) : f.type === 'textarea' ? (
+        <textarea name={f.name} rows="4" required={f.required} class={input} />
+      ) : (
+        <input name={f.name} type={f.type} required={f.required} autocomplete={f.autocomplete} class={input} />
+      )}
+    </label>
+  ))
+}

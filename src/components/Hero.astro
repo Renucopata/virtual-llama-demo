@@ -1,0 +1,108 @@
+---
+import Icon from './Icon.astro';
+import { localePath, type Dict, type Lang } from '@/i18n';
+
+interface Props {
+  t: Dict;
+  lang: Lang;
+}
+
+const { t, lang } = Astro.props;
+const { hero } = t;
+---
+
+<section class="relative overflow-hidden pt-32 pb-20 sm:pt-40">
+  <div class="pointer-events-none absolute -top-40 -right-40 size-[36rem] rounded-full bg-sand/70 blur-3xl" aria-hidden="true"></div>
+
+  <div class="container-x relative grid items-center gap-14 lg:grid-cols-[1.15fr_1fr]">
+    <div>
+      <p class="eyebrow" data-reveal>{hero.eyebrow}</p>
+      <h1 class="mt-5 text-3xl leading-[1.1] sm:text-4xl lg:text-5xl" data-reveal style="--reveal-delay:80ms">
+        {hero.title}
+        <span class="block text-muted">{hero.highlight}</span>
+      </h1>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-graphite" data-reveal style="--reveal-delay:160ms">{hero.lead}</p>
+      <div class="mt-8 flex flex-wrap gap-3" data-reveal style="--reveal-delay:240ms">
+        <a href={localePath(lang, 'apply')} class="btn-dark">{hero.journey}<Icon name="arrow" class="size-4" /></a>
+        <a href="#services" class="btn-ghost">{hero.secondary}</a>
+      </div>
+
+      <dl class="mt-14 grid max-w-xl grid-cols-3 gap-4 border-t border-ink/10 pt-8" data-reveal style="--reveal-delay:320ms">
+        {
+          hero.stats.map((s) => (
+            <div>
+              <dt class="sr-only">{s.label}</dt>
+              <dd class="font-display text-lg text-ink sm:text-2xl">{s.value}</dd>
+              <dd class="mt-1 text-xs leading-snug text-muted sm:text-sm">{s.label}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+
+    <!-- Product-style visual instead of stock photography -->
+    <div class="relative mx-auto w-full max-w-md" data-reveal style="--reveal-delay:200ms">
+      <div class="rounded-[2rem] bg-ink p-6 text-cream shadow-2xl shadow-ink/20 sm:p-8">
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-2 text-xs tracking-widest uppercase text-sand/80">
+            <span class="relative flex size-2.5">
+              <span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex size-2.5 rounded-full bg-emerald-400"></span>
+            </span>
+            {hero.card.status}
+          </span>
+          <span class="font-mono text-xs text-sand/60" id="call-timer">00:00</span>
+        </div>
+
+        <div class="mt-8 flex items-center gap-4">
+          <span class="grid size-14 place-items-center rounded-2xl bg-cream/10"><Icon name="headset" class="size-7" /></span>
+          <div>
+            <p class="text-sm text-sand/70">{hero.card.caller}</p>
+            <div class="mt-2 flex h-6 items-end gap-1" aria-hidden="true">
+              {Array.from({ length: 18 }).map((_, i) => <span class="wave-bar w-1 rounded-full bg-cream/70" style={`--i:${i}`} />)}
+            </div>
+          </div>
+        </div>
+
+        <ul class="mt-8 space-y-3">
+          {
+            hero.card.lines.map((line) => (
+              <li class="flex items-center gap-3 rounded-xl bg-cream/5 px-4 py-3 text-sm">
+                <Icon name="check" class="size-4 shrink-0 text-emerald-400" />
+                {line}
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-6 text-xs text-sand/60">{hero.card.footer}</p>
+      </div>
+      <div class="absolute -bottom-5 -left-5 -z-10 size-full rounded-[2rem] bg-sand" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .wave-bar {
+    height: 30%;
+    animation: wave 1.2s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -0.09s);
+  }
+  @keyframes wave {
+    0%, 100% { height: 25%; }
+    50% { height: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wave-bar { animation: none; height: 60%; }
+  }
+</style>
+
+<script>
+  const el = document.getElementById('call-timer');
+  if (el) {
+    let s = 0;
+    setInterval(() => {
+      s = (s + 1) % 3600;
+      el.textContent = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+    }, 1000);
+  }
+</script>

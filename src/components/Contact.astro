@@ -1,0 +1,84 @@
+---
+import Icon from './Icon.astro';
+import SectionHeading from './SectionHeading.astro';
+import { brand } from '@/config/brand';
+import type { Dict } from '@/i18n';
+
+interface Props {
+  t: Dict;
+}
+
+const { contact } = Astro.props.t;
+const f = contact.form;
+
+const field =
+  'w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-muted focus:border-ink focus:outline-none';
+---
+
+<section id="contact" class="py-24">
+  <div class="container-x grid gap-12 lg:grid-cols-[1fr_1.3fr]">
+    <div>
+      <SectionHeading eyebrow={contact.eyebrow} title={contact.title} lead={contact.lead} />
+      <ul class="mt-10 space-y-6" data-reveal>
+        <li class="flex gap-4">
+          <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-ink text-cream"><Icon name="clock" class="size-5" /></span>
+          <div><p class="eyebrow">{contact.hoursLabel}</p><p class="mt-1 text-ink">{contact.hours}</p></div>
+        </li>
+        <li class="flex gap-4">
+          <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-ink text-cream"><Icon name="mail" class="size-5" /></span>
+          <div>
+            <p class="eyebrow">{contact.emailLabel}</p>
+            <a href={`mailto:${brand.email}`} class="mt-1 block break-all text-ink underline-offset-4 hover:underline">{brand.email}</a>
+            <p class="text-sm text-muted">{contact.emailNote}</p>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-ink text-cream"><Icon name="phone" class="size-5" /></span>
+          <div>
+            <p class="eyebrow">{contact.phoneLabel}</p>
+            <a href={brand.phoneHref} class="mt-1 block text-ink underline-offset-4 hover:underline">{brand.phone}</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <form
+      data-ajax-form
+      class="grid gap-4 rounded-3xl bg-white/70 p-6 ring-1 ring-ink/5 sm:grid-cols-2 sm:p-8"
+      method="POST"
+      data-sending={f.sending}
+      data-success={f.success}
+      data-error={f.error}
+      data-reveal
+    >
+      <label class="grid gap-1.5 text-sm"><span>{f.name}</span><input name="name" required autocomplete="name" class={field} /></label>
+      <label class="grid gap-1.5 text-sm"><span>{f.company}</span><input name="company" autocomplete="organization" class={field} /></label>
+      <label class="grid gap-1.5 text-sm"><span>{f.email}</span><input name="email" type="email" required autocomplete="email" class={field} /></label>
+      <label class="grid gap-1.5 text-sm"><span>{f.phone}</span><input name="phone" type="tel" autocomplete="tel" class={field} /></label>
+      <label class="grid gap-1.5 text-sm sm:col-span-2">
+        <span>{f.service}</span>
+        <select name="service" class={field}>
+          {f.serviceOptions.map((o) => <option>{o}</option>)}
+        </select>
+      </label>
+      <label class="grid gap-1.5 text-sm sm:col-span-2">
+        <span>{f.message}</span>
+        <textarea name="message" rows="4" class={field}></textarea>
+      </label>
+      <input type="hidden" name="form_type" value="contact" />
+      <!-- Honeypot against bots -->
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+      <div class="flex flex-wrap items-center justify-between gap-4 sm:col-span-2">
+        <p class="text-xs text-muted">{f.privacy}</p>
+        <button type="submit" class="btn-dark">{f.submit}<Icon name="arrow" class="size-4" /></button>
+      </div>
+      <p data-form-status class="hidden rounded-xl px-4 py-3 text-sm sm:col-span-2" role="status"></p>
+    </form>
+  </div>
+</section>
+
+<script>
+  import { initAjaxForms } from '@/scripts/forms';
+
+  initAjaxForms();
+</script>

@@ -1,0 +1,34 @@
+---
+import Icon from './Icon.astro';
+import SectionHeading from './SectionHeading.astro';
+import type { Dict } from '@/i18n';
+
+interface Props {
+  t: Dict;
+}
+
+const { industries } = Astro.props.t;
+---
+
+<section id="industries" class="py-24">
+  <div class="container-x">
+    <SectionHeading eyebrow={industries.eyebrow} title={industries.title} lead={industries.lead} align="center" />
+    <div class="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        industries.items.map((ind, i) => (
+          <article
+            class="flex items-start gap-4 rounded-2xl border border-ink/10 p-6 transition hover:border-ink hover:bg-white/60"
+            data-reveal
+            style={`--reveal-delay:${(i % 3) * 70}ms`}
+          >
+            <Icon name={ind.icon} class="size-7 shrink-0 text-ink" />
+            <div>
+              <h3 class="text-sm">{ind.title}</h3>
+              <p class="mt-2 text-sm text-muted">{ind.text}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
