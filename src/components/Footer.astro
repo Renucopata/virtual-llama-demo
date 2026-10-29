@@ -14,33 +14,33 @@ const home = localePath(lang);
 const year = new Date().getFullYear();
 ---
 
-<footer class="bg-ink py-14 text-sand">
+<footer class="bg-ink py-14 text-sky">
   <div class="container-x grid gap-10 md:grid-cols-3">
     <div>
       <Logo tone="light" />
-      <p class="mt-4 max-w-xs text-sm text-sand/70">{t.footer.tagline}</p>
+      <p class="mt-4 max-w-xs text-sm text-sky/70">{t.footer.tagline}</p>
     </div>
 
     <nav class="grid grid-cols-2 gap-3 text-sm" aria-label="Footer">
-      {t.nav.links.map((l) => <a href={`${home}${l.href}`} class="hover:text-cream">{l.label}</a>)}
+      {t.nav.links.map((l) => <a href={`${home}${l.href}`} class="hover:text-paper">{l.label}</a>)}
     </nav>
 
     <div>
-      <p class="eyebrow text-sand/60">{t.footer.socials}</p>
+      <p class="eyebrow text-sky/60">{t.footer.socials}</p>
       <div class="mt-4 flex gap-3">
         {
           brand.socials.map((s) => (
-            <a href={s.href} aria-label={s.name} class="grid size-10 place-items-center rounded-full border border-sand/20 hover:border-cream hover:text-cream">
+            <a href={s.href} aria-label={s.name} class="grid size-10 place-items-center rounded-full border border-sky/20 hover:border-paper hover:text-paper">
               <Icon name={s.icon} class="size-5" />
             </a>
           ))
         }
       </div>
-      <a href={`mailto:${brand.email}`} class="mt-6 block text-sm break-all hover:text-cream">{brand.email}</a>
-      <a href={brand.phoneHref} class="mt-1 block text-sm hover:text-cream">{brand.phone}</a>
+      <a href={`mailto:${brand.email}`} class="mt-6 block text-sm break-all hover:text-paper">{brand.email}</a>
+      <a href={brand.phoneHref} class="mt-1 block text-sm hover:text-paper">{brand.phone}</a>
     </div>
   </div>
-  <div class="container-x mt-12 border-t border-sand/10 pt-6 text-xs text-sand/50">
+  <div class="container-x mt-12 border-t border-sky/10 pt-6 text-xs text-sky/50">
     © {year} {brand.name}. {t.footer.rights}
   </div>
 </footer>

@@ -21,15 +21,15 @@ const { services } = Astro.props.t;
       {
         services.items.map((s, i) => (
           <article
-            class="group flex flex-col rounded-3xl bg-cream p-8 ring-1 ring-ink/5 transition hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/5"
+            class="group flex flex-col rounded-3xl bg-paper p-8 ring-1 ring-ink/5 transition hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/5"
             data-reveal
             style={`--reveal-delay:${(i % 2) * 90}ms`}
           >
             <div class="flex items-center justify-between">
-              <span class="grid size-14 place-items-center rounded-2xl bg-ink text-cream transition group-hover:bg-accent group-hover:text-ink">
+              <span class="grid size-14 place-items-center rounded-2xl bg-ink text-paper transition group-hover:bg-primary group-hover:text-white">
                 <Icon name={s.icon} class="size-7" />
               </span>
-              <span class="font-display text-xs text-muted">0{i + 1}</span>
+              <span class="font-display text-3xl text-primary/40">0{i + 1}</span>
             </div>
             <h3 class="mt-8 text-lg leading-snug">{s.title}</h3>
             <p class="mt-3 text-sm leading-relaxed text-graphite">{s.text}</p>

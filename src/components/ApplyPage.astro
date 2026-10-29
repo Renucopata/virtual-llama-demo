@@ -22,7 +22,7 @@ const paths: ApplyPath[] = ['agent', 'company'];
 <Base t={t} lang={lang} slug="apply" meta={a.meta}>
   <Header t={t} lang={lang} slug="apply" />
   <main class="relative overflow-hidden pt-32 pb-24 sm:pt-40">
-    <div class="pointer-events-none absolute -top-40 -right-40 size-[36rem] rounded-full bg-sand/70 blur-3xl" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute -top-40 -right-40 size-[36rem] rounded-full bg-sky/70 blur-3xl" aria-hidden="true"></div>
 
     <div class="container-x relative max-w-4xl">
       <a href={localePath(lang)} class="inline-flex items-center gap-2 text-sm text-muted hover:text-ink">
@@ -43,10 +43,10 @@ const paths: ApplyPath[] = ['agent', 'company'];
                 data-choose={p}
                 class="group flex flex-col items-start rounded-3xl bg-white/70 p-8 text-left ring-1 ring-ink/10 transition hover:-translate-y-1 hover:ring-ink hover:shadow-xl hover:shadow-ink/5 focus-visible:outline-2 focus-visible:outline-ink"
               >
-                <span class="grid size-14 place-items-center rounded-2xl bg-ink text-cream transition group-hover:bg-accent group-hover:text-ink">
+                <span class="grid size-14 place-items-center rounded-2xl bg-ink text-paper transition group-hover:bg-primary group-hover:text-white">
                   <Icon name={a.choices[p].icon} class="size-7" />
                 </span>
-                <span class="mt-6 font-display text-base text-ink uppercase">{a.choices[p].title}</span>
+                <span class="mt-6 font-heading text-lg font-bold text-ink">{a.choices[p].title}</span>
                 <span class="mt-3 text-sm leading-relaxed text-muted">{a.choices[p].text}</span>
                 <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ink">
                   <Icon name="arrow" class="size-4 transition group-hover:translate-x-1" />

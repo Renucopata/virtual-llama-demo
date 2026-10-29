@@ -16,12 +16,12 @@ const home = localePath(lang);
 const links = t.nav.links.map((l) => ({ ...l, href: `${home}${l.href}` }));
 ---
 
-<header id="site-header" class="fixed inset-x-0 top-0 z-40 transition-all duration-300">
+<header id="site-header" class="fixed inset-x-0 top-0 z-40 bg-ink/80 text-white backdrop-blur transition-all duration-300">
   <div class="container-x flex h-18 items-center justify-between gap-6">
-    <a href={home} aria-label="Home"><Logo /></a>
+    <a href={home} aria-label="Home"><Logo class="h-9 w-auto sm:h-10" /></a>
 
     <nav class="hidden items-center gap-7 lg:flex" aria-label="Main">
-      {links.map((l) => <a href={l.href} class="text-sm text-graphite transition hover:text-ink">{l.label}</a>)}
+      {links.map((l) => <a href={l.href} class="text-sm text-white/75 transition hover:text-white">{l.label}</a>)}
     </nav>
 
     <div class="flex items-center gap-3">
@@ -29,13 +29,16 @@ const links = t.nav.links.map((l) => ({ ...l, href: `${home}${l.href}` }));
         href={localePath(otherLang(lang), slug)}
         hreflang={otherLang(lang)}
         title={t.nav.switchLang}
-        class="rounded-full border border-ink/15 px-3 py-1.5 font-display text-xs uppercase hover:border-ink"
+        class="rounded-full border border-white/25 px-3 py-1.5 text-xs font-semibold tracking-wider uppercase hover:border-white"
       >{lang === 'en' ? 'ES' : 'EN'}</a
       >
-      <a href={`${home}#contact`} class="btn-dark hidden sm:inline-flex">{t.nav.cta}</a>
+      <a href={localePath(lang, 'login')} class="hidden items-center gap-2 text-sm font-semibold text-white/85 hover:text-white sm:inline-flex">
+        <Icon name="user" class="size-4" />{t.nav.login}
+      </a>
+      <a href={`${home}#contact`} class="btn-primary hidden sm:inline-flex">{t.nav.cta}</a>
       <button
         id="menu-open"
-        class="grid size-10 place-items-center rounded-full border border-ink/15 lg:hidden"
+        class="grid size-10 place-items-center rounded-full border border-white/25 lg:hidden"
         aria-label={t.nav.menu}
         aria-controls="mobile-menu"
         aria-expanded="false"
@@ -46,17 +49,20 @@ const links = t.nav.links.map((l) => ({ ...l, href: `${home}${l.href}` }));
   </div>
 </header>
 
-<div id="mobile-menu" class="fixed inset-0 z-50 hidden flex-col bg-ink px-4 py-5 text-cream lg:hidden" role="dialog" aria-modal="true">
+<div id="mobile-menu" class="fixed inset-0 z-50 hidden flex-col bg-ink px-4 py-5 text-white lg:hidden" role="dialog" aria-modal="true">
   <div class="flex items-center justify-between">
-    <Logo tone="light" />
-    <button id="menu-close" class="grid size-10 place-items-center rounded-full border border-cream/20" aria-label={t.nav.close}>
+    <Logo class="h-9 w-auto" />
+    <button id="menu-close" class="grid size-10 place-items-center rounded-full border border-white/25" aria-label={t.nav.close}>
       <Icon name="close" class="size-5" />
     </button>
   </div>
   <nav class="mt-12 flex flex-col gap-6" aria-label="Mobile">
-    {links.map((l) => <a href={l.href} class="font-display text-xl uppercase" data-close-menu>{l.label}</a>)}
+    {links.map((l) => <a href={l.href} class="font-display text-4xl tracking-wide uppercase hover:text-lavender" data-close-menu>{l.label}</a>)}
   </nav>
-  <a href={`${home}#contact`} class="btn-light mt-auto justify-center" data-close-menu>{t.nav.cta}</a>
+  <div class="mt-auto grid gap-3">
+    <a href={localePath(lang, 'login')} class="btn-ghost-light justify-center"><Icon name="user" class="size-4" />{t.nav.login}</a>
+    <a href={`${home}#contact`} class="btn-primary justify-center" data-close-menu>{t.nav.cta}</a>
+  </div>
 </div>
 
 <script>
@@ -66,9 +72,9 @@ const links = t.nav.links.map((l) => ({ ...l, href: `${home}${l.href}` }));
 
   const onScroll = () => {
     const scrolled = window.scrollY > 12;
-    header.classList.toggle('bg-cream/90', scrolled);
-    header.classList.toggle('backdrop-blur', scrolled);
-    header.classList.toggle('shadow-sm', scrolled);
+    header.classList.toggle('bg-ink/80', !scrolled);
+    header.classList.toggle('bg-ink/95', scrolled);
+    header.classList.toggle('shadow-lg', scrolled);
   };
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });

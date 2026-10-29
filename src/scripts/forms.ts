@@ -11,8 +11,8 @@ export function initAjaxForms() {
 
     const show = (msg: string, ok: boolean) => {
       status.textContent = msg;
-      status.classList.remove('hidden', 'bg-emerald-100', 'bg-red-100');
-      status.classList.add(ok ? 'bg-emerald-100' : 'bg-red-100');
+      status.classList.remove('hidden', 'bg-mint', 'bg-red-100');
+      status.classList.add(ok ? 'bg-mint' : 'bg-red-100');
     };
 
     form.addEventListener('submit', async (e) => {

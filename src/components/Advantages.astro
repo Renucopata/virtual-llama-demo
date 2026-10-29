@@ -10,19 +10,104 @@ interface Props {
 const { advantages } = Astro.props.t;
 ---
 
-<section id="advantages" class="bg-ink py-24 text-cream">
+<section id="advantages" class="bg-ink py-24 text-paper">
   <div class="container-x">
     <SectionHeading eyebrow={advantages.eyebrow} title={advantages.title} lead={advantages.lead} tone="light" />
-    <div class="mt-14 grid gap-px overflow-hidden rounded-3xl bg-cream/10 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="mt-14 grid gap-px overflow-hidden rounded-3xl bg-paper/10 sm:grid-cols-2 lg:grid-cols-3">
       {
         advantages.items.map((item, i) => (
           <article class="bg-ink p-8 transition hover:bg-graphite" data-reveal style={`--reveal-delay:${i * 70}ms`}>
-            <Icon name={item.icon} class="size-8 text-accent" />
-            <h3 class="mt-6 text-base text-cream">{item.title}</h3>
-            <p class="mt-3 text-sm leading-relaxed text-sand/75">{item.text}</p>
+            <span class={`icon-anim anim-${item.icon}`} style={`--anim-delay:${i * -0.4}s`}>
+              <Icon name={item.icon} class="size-8 text-primary" />
+            </span>
+            <h3 class="mt-6 text-base text-paper">{item.title}</h3>
+            <p class="mt-3 text-sm leading-relaxed text-sky/75">{item.text}</p>
           </article>
         ))
       }
     </div>
   </div>
 </section>
+
+<style>
+  /* Looping icon animations, keyed by the dictionary's icon name (so they work in every language).
+     Icons without a rule here simply stay still. */
+  .icon-anim {
+    display: inline-block;
+    transform-origin: center;
+  }
+
+  /* Bilingual: tilts side to side like a conversation */
+  .anim-languages {
+    animation: talk 2.4s ease-in-out infinite;
+  }
+  @keyframes talk {
+    0%, 100% { transform: rotate(0) translateY(0); }
+    25% { transform: rotate(-8deg) translateY(-2px); }
+    50% { transform: rotate(0) translateY(0); }
+    75% { transform: rotate(8deg) translateY(-2px); }
+  }
+
+  /* Always on: alarm-clock shake, then a pause */
+  .anim-clock {
+    animation: ring 3s ease-in-out infinite;
+  }
+  @keyframes ring {
+    0%, 30%, 100% { transform: rotate(0); }
+    5% { transform: rotate(-14deg); }
+    10% { transform: rotate(12deg); }
+    15% { transform: rotate(-10deg); }
+    20% { transform: rotate(8deg); }
+    25% { transform: rotate(-4deg); }
+  }
+
+  /* Same working hours: the globe spins */
+  .anim-globe {
+    animation: spin 8s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Trained on your business: the briefcase hops */
+  .anim-briefcase {
+    animation: hop 2.6s ease-in-out infinite;
+    transform-origin: bottom center;
+  }
+  @keyframes hop {
+    0%, 60%, 100% { transform: translateY(0) scale(1); }
+    20% { transform: translateY(-6px) scale(1.04, 0.96); }
+    35% { transform: translateY(0) scale(1.06, 0.92); }
+    45% { transform: translateY(0) scale(1); }
+  }
+
+  /* Shared values: the heart beats */
+  .anim-heart {
+    animation: beat 1.6s ease-in-out infinite;
+  }
+  @keyframes beat {
+    0%, 60%, 100% { transform: scale(1); }
+    15% { transform: scale(1.2); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.12); }
+  }
+
+  /* Lower costs: the chart bars grow */
+  .anim-chart {
+    animation: grow 2.2s ease-in-out infinite alternate;
+    transform-origin: bottom center;
+  }
+  @keyframes grow {
+    from { transform: scaleY(0.75); }
+    to { transform: scaleY(1.08); }
+  }
+
+  /* After the rules above, because the `animation` shorthand resets the delay. Staggers the icons. */
+  .icon-anim {
+    animation-delay: var(--anim-delay, 0s);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .icon-anim { animation: none; }
+  }
+</style>

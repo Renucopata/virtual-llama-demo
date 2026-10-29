@@ -42,7 +42,7 @@ export interface Dict {
     privacy: string;
     back: string;
   };
-  nav: { links: { label: string; href: string }[]; cta: string; menu: string; close: string; switchLang: string };
+  nav: { links: { label: string; href: string }[]; cta: string; login: string; menu: string; close: string; switchLang: string };
   hero: {
     eyebrow: string;
     title: string;

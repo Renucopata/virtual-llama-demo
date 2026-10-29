@@ -21,11 +21,11 @@ const field =
       <SectionHeading eyebrow={contact.eyebrow} title={contact.title} lead={contact.lead} />
       <ul class="mt-10 space-y-6" data-reveal>
         <li class="flex gap-4">
-          <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-ink text-cream"><Icon name="clock" class="size-5" /></span>
+          <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-ink text-paper"><Icon name="clock" class="size-5" /></span>
           <div><p class="eyebrow">{contact.hoursLabel}</p><p class="mt-1 text-ink">{contact.hours}</p></div>
         </li>
         <li class="flex gap-4">
-          <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-ink text-cream"><Icon name="mail" class="size-5" /></span>
+          <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-ink text-paper"><Icon name="mail" class="size-5" /></span>
           <div>
             <p class="eyebrow">{contact.emailLabel}</p>
             <a href={`mailto:${brand.email}`} class="mt-1 block break-all text-ink underline-offset-4 hover:underline">{brand.email}</a>
@@ -33,7 +33,7 @@ const field =
           </div>
         </li>
         <li class="flex gap-4">
-          <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-ink text-cream"><Icon name="phone" class="size-5" /></span>
+          <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-ink text-paper"><Icon name="phone" class="size-5" /></span>
           <div>
             <p class="eyebrow">{contact.phoneLabel}</p>
             <a href={brand.phoneHref} class="mt-1 block text-ink underline-offset-4 hover:underline">{brand.phone}</a>

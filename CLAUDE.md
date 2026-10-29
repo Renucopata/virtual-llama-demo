@@ -17,11 +17,11 @@ npm run preview   # serve dist/
 npm run check     # astro check (type-checks .astro and .ts)
 ```
 
-There are no tests or linter configured.
+There are no tests or linter configured. `npm run build` does not type-check TSX; run `npm run check` after editing `src/portal/`.
 
 ## Stack
 
-Astro 7 (static output), Tailwind CSS 4 via `@tailwindcss/vite` (no tailwind.config file: tokens live in CSS), self-hosted fonts via Fontsource (Lexend Peta for display, Lexend for body), `@astrojs/sitemap`. No UI framework: interactivity is small inline `<script>` blocks in components.
+Astro 7 (static output), Tailwind CSS 4 via `@tailwindcss/vite` (no tailwind.config file: tokens live in CSS), self-hosted fonts via Fontsource, `@astrojs/sitemap`. The marketing pages use no UI framework (interactivity is small inline `<script>` blocks). Only the demo portal uses Preact (`@astrojs/preact`) islands.
 
 ## Architecture
 
@@ -32,11 +32,24 @@ Two pages, each rendered once per language. Route files in `src/pages/` (and `sr
 - Use `localePath(lang, slug)` from `src/i18n/index.ts` for internal URLs. Pages pass `slug` to `Base` (canonical/hreflang) and `Header` (language switch stays on the same page). Nav anchors are prefixed with the home path so they work from `/apply/` too.
 - Every section component takes the whole dictionary as a `t: Dict` prop and reads its own slice (`t.hero`, `t.services`, ...). Components contain no user-facing strings.
 
+### Demo portal (`/login/`, `/portal/`, `/admin/`)
+
+A **frontend-only demo**: there is no backend, database or real auth. Do not treat it as secure.
+
+- Route files render `src/components/PortalPage.astro` with `app="login" | "portal" | "admin"`, which mounts `src/portal/LoginApp.tsx`, `AgentApp.tsx` or `AdminApp.tsx` with `client:only="preact"` (they read browser storage, so they can't be server-rendered). These pages get `noindex` and are filtered out of the sitemap in `astro.config.mjs`.
+- `src/portal/data.ts`: all sample data and types. It covers 10 agents, 5 clients, 4 admin users, the role/permission matrix, custom field definitions and `DEMO_ACCOUNTS` (2 agents, 2 admins, password `demo123`). Payment dates are generated relative to today in `buildSeed()`, so "upcoming" is always current.
+- `src/portal/store.ts`: the "database" is the seed copied into `localStorage` (`vl-demo-db`). Admin edits persist there and show up on the agent profile; bump `DB_VERSION` when the data shape changes. The session lives in `sessionStorage` (`vl-demo-session`). Also holds formatting helpers (`money`, `date`, `loc` for `{en, es}` values).
+- Admin permissions are enforced only in the UI via `can(db, role, permission)`. The `superadmin` column is locked so the demo can't lock itself out.
+- "Export to Excel" writes a real `.xlsx` with `write-excel-file/browser`, loaded with a dynamic import on click.
+- Portal strings live in `src/i18n/portal.ts` (`PortalDict`, with `{placeholder}` filled by `fmt()`), separate from the marketing `Dict`.
+- Shared UI pieces (`Card`, `Badge`, `AppBar`, ...) are in `src/portal/ui.tsx`. Icon paths are shared with `Icon.astro` through `src/components/icons.ts`.
+
 Content and branding live in three places. Re-skinning for a new client means editing only these:
 
 1. `src/i18n/en.ts` / `src/i18n/es.ts`: all copy. Both must satisfy the `Dict` interface in `src/i18n/types.ts`; adding a field means updating the type and both dictionaries.
 2. `src/config/brand.ts`: language-independent facts (name, email, phone, WhatsApp, socials). Contains TODOs for unconfirmed client data.
-3. `@theme` block in `src/styles/global.css`: colours and fonts, used as Tailwind utilities (`bg-cream`, `text-ink`, `font-display`, ...).
+3. `@theme` block in `src/styles/global.css`: colours and fonts, used as Tailwind utilities. Palette comes from `brand-guidelines/colors.jpeg`: `ink` #0c0c16 (main), `primary` #6666ff (secondary), `lavender` #b8baff and `sky` #c9e8ff (complementary), `mint` #b9f0d7 (use sparingly: only the hero "live" dot and form success). `paper`, `graphite` and `muted` are derived neutrals. Fonts: `font-heading`/`font-sans` = Plus Jakarta Sans (titles and body), `font-display` = Bebas Neue (large display text only: the hero `h1`, stats, mobile menu, service numbers).
+4. `public/brand/`: logo exports. `Logo.astro` takes `variant="full" | "mark"` (llama only) and `tone="light" | "dark"`. The header is always dark because the logo is white. Favicons are `public/favicon-*.png` and `apple-touch-icon.png`.
 
 Other conventions:
 

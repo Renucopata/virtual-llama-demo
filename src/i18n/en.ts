@@ -118,6 +118,7 @@ export const en: Dict = {
       { label: 'FAQ', href: '#faq' },
     ],
     cta: 'Get a quote',
+    login: 'Log in',
     menu: 'Open menu',
     close: 'Close menu',
     switchLang: 'Ver en español',

@@ -11,29 +11,38 @@ const { t, lang } = Astro.props;
 const { hero } = t;
 ---
 
-<section class="relative overflow-hidden pt-32 pb-20 sm:pt-40">
-  <div class="pointer-events-none absolute -top-40 -right-40 size-[36rem] rounded-full bg-sand/70 blur-3xl" aria-hidden="true"></div>
+<section class="relative overflow-hidden bg-ink pt-32 pb-24 text-white sm:pt-40">
+  <!-- Brand gradient (brand-guidelines/background.jpeg), mirrored so the light falls on the right -->
+  <img
+    src="/brand/hero-bg.webp"
+    alt=""
+    class="pointer-events-none absolute inset-0 size-full -scale-x-100 object-cover opacity-90"
+    fetchpriority="high"
+    aria-hidden="true"
+  />
+  <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink via-ink/70 to-transparent" aria-hidden="true"></div>
+  <div class="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-ink" aria-hidden="true"></div>
 
   <div class="container-x relative grid items-center gap-14 lg:grid-cols-[1.15fr_1fr]">
     <div>
-      <p class="eyebrow" data-reveal>{hero.eyebrow}</p>
-      <h1 class="mt-5 text-3xl leading-[1.1] sm:text-4xl lg:text-5xl" data-reveal style="--reveal-delay:80ms">
+      <p class="eyebrow text-lavender" data-reveal>{hero.eyebrow}</p>
+      <h1 class="mt-5 text-6xl leading-[0.95] text-white sm:text-7xl lg:text-8xl" data-reveal style="--reveal-delay:80ms">
         {hero.title}
-        <span class="block text-muted">{hero.highlight}</span>
+        <span class="block text-lavender">{hero.highlight}</span>
       </h1>
-      <p class="mt-6 max-w-xl text-lg leading-relaxed text-graphite" data-reveal style="--reveal-delay:160ms">{hero.lead}</p>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/80" data-reveal style="--reveal-delay:160ms">{hero.lead}</p>
       <div class="mt-8 flex flex-wrap gap-3" data-reveal style="--reveal-delay:240ms">
-        <a href={localePath(lang, 'apply')} class="btn-dark">{hero.journey}<Icon name="arrow" class="size-4" /></a>
-        <a href="#services" class="btn-ghost">{hero.secondary}</a>
+        <a href={localePath(lang, 'apply')} class="btn-primary">{hero.journey}<Icon name="arrow" class="size-4" /></a>
+        <a href="#services" class="btn-ghost-light">{hero.secondary}</a>
       </div>
 
-      <dl class="mt-14 grid max-w-xl grid-cols-3 gap-4 border-t border-ink/10 pt-8" data-reveal style="--reveal-delay:320ms">
+      <dl class="mt-14 grid max-w-xl grid-cols-3 gap-4 border-t border-white/15 pt-8" data-reveal style="--reveal-delay:320ms">
         {
           hero.stats.map((s) => (
             <div>
               <dt class="sr-only">{s.label}</dt>
-              <dd class="font-display text-lg text-ink sm:text-2xl">{s.value}</dd>
-              <dd class="mt-1 text-xs leading-snug text-muted sm:text-sm">{s.label}</dd>
+              <dd class="font-display text-4xl tracking-wide text-white sm:text-5xl">{s.value}</dd>
+              <dd class="mt-1 text-xs leading-snug text-white/65 sm:text-sm">{s.label}</dd>
             </div>
           ))
         }
@@ -41,25 +50,25 @@ const { hero } = t;
     </div>
 
     <!-- Product-style visual instead of stock photography -->
-    <div class="relative mx-auto w-full max-w-md" data-reveal style="--reveal-delay:200ms">
-      <div class="rounded-[2rem] bg-ink p-6 text-cream shadow-2xl shadow-ink/20 sm:p-8">
+    <div class="relative isolate mx-auto w-full max-w-md" data-reveal style="--reveal-delay:200ms">
+      <div class="rounded-[2rem] border border-white/10 bg-ink/70 p-6 text-white shadow-2xl shadow-black/40 backdrop-blur-xl sm:p-8">
         <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2 text-xs tracking-widest uppercase text-sand/80">
+          <span class="flex items-center gap-2 text-xs tracking-widest uppercase text-sky/80">
             <span class="relative flex size-2.5">
-              <span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-              <span class="relative inline-flex size-2.5 rounded-full bg-emerald-400"></span>
+              <span class="absolute inline-flex size-full animate-ping rounded-full bg-mint opacity-75"></span>
+              <span class="relative inline-flex size-2.5 rounded-full bg-mint"></span>
             </span>
             {hero.card.status}
           </span>
-          <span class="font-mono text-xs text-sand/60" id="call-timer">00:00</span>
+          <span class="font-mono text-xs text-sky/60" id="call-timer">00:00</span>
         </div>
 
         <div class="mt-8 flex items-center gap-4">
-          <span class="grid size-14 place-items-center rounded-2xl bg-cream/10"><Icon name="headset" class="size-7" /></span>
+          <span class="grid size-14 place-items-center rounded-2xl bg-primary"><Icon name="headset" class="size-7" /></span>
           <div>
-            <p class="text-sm text-sand/70">{hero.card.caller}</p>
+            <p class="text-sm text-sky/70">{hero.card.caller}</p>
             <div class="mt-2 flex h-6 items-end gap-1" aria-hidden="true">
-              {Array.from({ length: 18 }).map((_, i) => <span class="wave-bar w-1 rounded-full bg-cream/70" style={`--i:${i}`} />)}
+              {Array.from({ length: 18 }).map((_, i) => <span class="wave-bar w-1 rounded-full bg-lavender" style={`--i:${i}`} />)}
             </div>
           </div>
         </div>
@@ -67,16 +76,16 @@ const { hero } = t;
         <ul class="mt-8 space-y-3">
           {
             hero.card.lines.map((line) => (
-              <li class="flex items-center gap-3 rounded-xl bg-cream/5 px-4 py-3 text-sm">
-                <Icon name="check" class="size-4 shrink-0 text-emerald-400" />
+              <li class="flex items-center gap-3 rounded-xl bg-white/5 px-4 py-3 text-sm">
+                <Icon name="check" class="size-4 shrink-0 text-lavender" />
                 {line}
               </li>
             ))
           }
         </ul>
-        <p class="mt-6 text-xs text-sand/60">{hero.card.footer}</p>
+        <p class="mt-6 text-xs text-sky/60">{hero.card.footer}</p>
       </div>
-      <div class="absolute -bottom-5 -left-5 -z-10 size-full rounded-[2rem] bg-sand" aria-hidden="true"></div>
+      <img src="/brand/llama-white.png" alt="" width="481" height="631" class="pointer-events-none absolute -right-6 -bottom-10 -z-10 h-56 w-auto opacity-10" aria-hidden="true" />
     </div>
   </div>
 </section>

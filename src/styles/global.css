@@ -1,19 +1,24 @@
 @import 'tailwindcss';
-@import '@fontsource/lexend-peta/400.css';
-@import '@fontsource/lexend-peta/600.css';
-@import '@fontsource-variable/lexend';
+@import '@fontsource-variable/plus-jakarta-sans';
+@import '@fontsource/bebas-neue';
 
-/* Brand tokens. Re-skin for another client by changing these values and src/config/brand.ts. */
+/* Brand tokens (see brand-guidelines/colors.jpeg). Re-skin for another client by changing these values and src/config/brand.ts.
+   ink = main, primary = secondary, lavender/sky = complementary, mint = rare highlight only (live dot, success). */
 @theme {
-  --color-cream: #fef1de;
-  --color-sand: #e3d9c6;
-  --color-ink: #1a1a1a;
-  --color-graphite: #333333;
-  --color-muted: #707070;
-  --color-accent: #e8a33d;
+  --color-ink: #0c0c16;
+  --color-primary: #6666ff;
+  --color-lavender: #b8baff;
+  --color-sky: #c9e8ff;
+  --color-mint: #b9f0d7;
 
-  --font-display: 'Lexend Peta', sans-serif;
-  --font-sans: 'Lexend Variable', system-ui, sans-serif;
+  /* Derived neutrals */
+  --color-paper: #f5f8ff;
+  --color-graphite: #1c1c2e;
+  --color-muted: #5c5f78;
+
+  --font-display: 'Bebas Neue', Impact, sans-serif;
+  --font-heading: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
 }
 
 @layer base {
@@ -22,11 +27,14 @@
     scroll-padding-top: 5rem;
   }
   body {
-    @apply bg-cream font-sans text-graphite antialiased;
+    @apply bg-paper font-sans text-graphite antialiased;
   }
-  h1, h2, h3 {
-    @apply font-display text-ink uppercase;
-    letter-spacing: -0.02em;
+  /* Bebas Neue for large display text, Plus Jakarta Sans for titles. */
+  h1 {
+    @apply font-display font-normal tracking-wide text-ink uppercase;
+  }
+  h2, h3, h4 {
+    @apply font-heading font-bold tracking-tight text-ink;
   }
 }
 
@@ -34,20 +42,26 @@
   @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
 }
 @utility eyebrow {
-  @apply font-display text-xs tracking-[0.2em] uppercase text-muted;
+  @apply font-heading text-xs font-semibold tracking-[0.2em] text-primary uppercase;
 }
 @utility btn {
   @apply inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition
     duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2;
 }
+@utility btn-primary {
+  @apply btn bg-primary text-white hover:bg-[#5252f0] focus-visible:outline-primary;
+}
 @utility btn-dark {
-  @apply btn bg-ink text-cream hover:bg-graphite focus-visible:outline-ink;
+  @apply btn bg-ink text-white hover:bg-graphite focus-visible:outline-ink;
 }
 @utility btn-light {
-  @apply btn bg-cream text-ink hover:bg-sand focus-visible:outline-cream;
+  @apply btn bg-white text-ink hover:bg-sky focus-visible:outline-white;
 }
 @utility btn-ghost {
   @apply btn border border-ink/20 text-ink hover:border-ink;
+}
+@utility btn-ghost-light {
+  @apply btn border border-white/30 text-white hover:border-white;
 }
 
 /* Scroll reveal (replaces Elementor entrance animations). */

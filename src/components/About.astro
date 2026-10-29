@@ -18,7 +18,7 @@ const { about, team } = Astro.props.t;
         {about.story.map((p) => <p>{p}</p>)}
       </div>
       <!-- Placeholder for a team or office photo -->
-      <div class="mt-10 aspect-[4/3] rounded-3xl bg-gradient-to-br from-sand to-cream ring-1 ring-ink/5" data-reveal role="img" aria-label="Team photo placeholder"></div>
+      <div class="mt-10 aspect-[4/3] rounded-3xl bg-gradient-to-br from-sky to-paper ring-1 ring-ink/5" data-reveal role="img" aria-label="Team photo placeholder"></div>
     </div>
 
     <div>
@@ -27,11 +27,11 @@ const { about, team } = Astro.props.t;
         {
           about.values.map((v, i) => (
             <li class="flex gap-5 rounded-2xl bg-white/60 p-6 ring-1 ring-ink/5" data-reveal style={`--reveal-delay:${i * 70}ms`}>
-              <span class="grid size-12 shrink-0 place-items-center rounded-xl bg-ink text-cream">
+              <span class="grid size-12 shrink-0 place-items-center rounded-xl bg-ink text-paper">
                 <Icon name={v.icon} class="size-6" />
               </span>
               <div>
-                <h4 class="font-display text-sm text-ink uppercase">{v.title}</h4>
+                <h4 class="text-base">{v.title}</h4>
                 <p class="mt-2 text-sm leading-relaxed text-muted">{v.text}</p>
               </div>
             </li>
@@ -46,7 +46,7 @@ const { about, team } = Astro.props.t;
     <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {
         team.items.map((m, i) => (
-          <article class="rounded-3xl bg-sand/60 p-7" data-reveal style={`--reveal-delay:${i * 70}ms`}>
+          <article class="rounded-3xl bg-sky/60 p-7" data-reveal style={`--reveal-delay:${i * 70}ms`}>
             <Icon name={m.icon} class="size-8 text-ink" />
             <h3 class="mt-5 text-sm">{m.title}</h3>
             <p class="mt-2 text-sm leading-relaxed text-graphite">{m.text}</p>

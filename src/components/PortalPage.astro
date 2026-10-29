@@ -1,0 +1,56 @@
+---
+// Shell for the demo portal pages. The apps are client-only Preact islands because they read the
+// demo session and data from browser storage (see src/portal/store.ts).
+import Base from '@/layouts/Base.astro';
+import LoginApp from '@/portal/LoginApp';
+import AgentApp from '@/portal/AgentApp';
+import AdminApp from '@/portal/AdminApp';
+import { getDict, localePath, otherLang, type Lang } from '@/i18n';
+import { portalDict } from '@/i18n/portal';
+
+interface Props {
+  lang: Lang;
+  app: 'login' | 'portal' | 'admin';
+}
+
+const { lang, app } = Astro.props;
+const t = getDict(lang);
+const pt = portalDict[lang];
+const meta = {
+  title: `${app === 'login' ? pt.login.title : app === 'admin' ? pt.admin.title : pt.agent.personal} | Virtual Llama`,
+  description: pt.login.lead,
+};
+const paths = {
+  home: localePath(lang),
+  login: localePath(lang, 'login'),
+  agent: localePath(lang, 'portal'),
+  admin: localePath(lang, 'admin'),
+  alt: localePath(otherLang(lang), app),
+};
+---
+
+<Base t={t} lang={lang} slug={app} meta={meta} noindex>
+  {
+    app === 'login' ? (
+      <main class="relative min-h-screen overflow-hidden bg-ink py-12 sm:py-20">
+        <img src="/brand/hero-bg.webp" alt="" class="pointer-events-none absolute inset-0 size-full object-cover opacity-60" aria-hidden="true" />
+        <div class="relative mx-auto max-w-5xl px-4 sm:px-6">
+          <div class="mb-8 flex items-center justify-between">
+            <a href={paths.home}>
+              <img src="/brand/logo-white.png" alt="Virtual Llama" class="h-10 w-auto" width="1492" height="631" />
+            </a>
+            <a href={paths.alt} class="rounded-full border border-white/25 px-3 py-1.5 text-xs font-semibold tracking-wider text-white uppercase hover:border-white">
+              {lang === 'en' ? 'ES' : 'EN'}
+            </a>
+          </div>
+          <LoginApp client:only="preact" lang={lang} t={pt} paths={paths} />
+        </div>
+      </main>
+    ) : (
+      <div class="min-h-screen bg-paper">
+        {app === 'portal' && <AgentApp client:only="preact" lang={lang} t={pt} paths={paths} />}
+        {app === 'admin' && <AdminApp client:only="preact" lang={lang} t={pt} paths={paths} />}
+      </div>
+    )
+  }
+</Base>

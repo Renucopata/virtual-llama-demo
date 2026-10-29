@@ -10,9 +10,11 @@ interface Props {
   slug?: string;
   /** Overrides the home page title/description. */
   meta?: { title: string; description: string };
+  /** Keep the page out of search engines (demo portal). */
+  noindex?: boolean;
 }
 
-const { t, lang, slug = '', meta = t.meta } = Astro.props;
+const { t, lang, slug = '', meta = t.meta, noindex = false } = Astro.props;
 const site = Astro.site ?? new URL(brand.url);
 const enUrl = new URL(localePath('en', slug), site).href;
 const esUrl = new URL(localePath('es', slug), site).href;
@@ -38,11 +40,14 @@ const org = {
     <title>{meta.title}</title>
     <meta name="description" content={meta.description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="alternate" hreflang="en" href={enUrl} />
     <link rel="alternate" hreflang="es" href={esUrl} />
     <link rel="alternate" hreflang="x-default" href={enUrl} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="theme-color" content="#1a1a1a" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon-512.png" type="image/png" sizes="512x512" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0c0c16" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={meta.title} />
     <meta property="og:description" content={meta.description} />
